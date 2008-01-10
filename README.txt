@@ -3,7 +3,7 @@ ruby-wmi
     http://ruby-wmi.rubyforge.org/
 
 == DESCRIPTION:
-  
+
     ruby-wmi is an ActiveRecord style interface for Microsoft's Windows Management Instrumentation provider.
 
 == SYNOPSIS:
@@ -12,9 +12,9 @@ ruby-wmi
 
     require 'ruby-wmi'
 
-    processes = Win32::Process.find(:all, :conditions => { :name => 'Notepad.exe' })
+    processes = WMI::Win32_Process.find(:all, :conditions => { :name => 'Notepad.exe' })
     morituri = processes.sort_by{|p| p.CreationDate } #those who are about to die
-    morituri.shift 
+    morituri.shift
     morituri.each{|p| p.terminate }
 
 == REQUIREMENTS:
