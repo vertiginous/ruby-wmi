@@ -1,10 +1,4 @@
-#~ 'active_wmi'
-#~ 'wmi_rb'
-#~ 'ruby-wmi'
-#~ 'rWMI'
-#~ 'wmi4r'
-
-require 'wmi'
+require 'ruby-wmi'
 
 LOGOFF = 0
 

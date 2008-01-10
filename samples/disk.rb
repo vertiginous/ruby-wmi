@@ -1,4 +1,4 @@
-require 'wmi'
+require 'ruby-wmi'
 
 disks = WMI::Win32_LogicalDisk.find(:all)
 
