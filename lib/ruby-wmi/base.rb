@@ -14,13 +14,9 @@ module WMI
       self.const_set(name, Class.new(self::Base))
     end
     extend self
-  
-  
+    
   class Base
       
-    #~ def initialize(host='.',usr=nil,pwd=nil,klass='root/cimv2')
-      #~ @host,@klass,@usr,@pwd = host,klass,usr,pwd
-    #~ end
     class << self
       def subclass_name
         self.name.split('::').last

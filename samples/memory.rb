@@ -1,19 +1,14 @@
 require 'wmi'
-#~ require 'active_support'
-
-
 
 properties = ['Description','MaxCapacity','MemoryDevices','MemoryErrorCorrection'] 
 
 
-mem = Win32::PhysicalMemoryArray.find(:all, :host => 'zstlecap001')
+mem = WMI::Win32_PhysicalMemoryArray.find(:all, :host => 'server1')
 mem.each{|i| puts properties.map{|p| "#{p}: #{i[p]}"}}
 
-mem2 = Win32::PhysicalMemoryArray.find(:all, {:host => 'zstlecap003', :credentials => 
-  {:user => 'disney\\gthiesfeld', :passwd => 'Britches!'} 
+mem2 = WMI::Win32_PhysicalMemoryArray.find(:all, {:host => 'server2', :credentials => 
+  {:user => 'domain\\gordon', :passwd => 'password'} 
   }
  )
 mem2.each{|i| puts properties.map{|p| "#{p}: #{i[p]}"}}
 
-
-p WMI::subclasses_of :host => 'zstlecap001'

@@ -4,15 +4,11 @@ ruby-wmi
 
 == DESCRIPTION:
   
-FIX (describe your package)
-
-== FEATURES/PROBLEMS:
-  
-* FIX (list of features or problems)
+    ruby-wmi is an ActiveRecord style interface for Microsoft's Windows Management Instrumentation provider.
 
 == SYNOPSIS:
 
-  # Kill all processes of a given name, except the oldest (in this case, Notepad)
+  # The following code sample kills all processes of a given name, except the oldest (in this case, Notepad)
 
     require 'ruby-wmi'
 
@@ -32,7 +28,7 @@ FIX (describe your package)
 
 (The MIT License)
 
-Copyright (c) 2007 FIX
+Copyright (c) 2007 Gordon Thiesfeld
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
