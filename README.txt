@@ -8,7 +8,7 @@ ruby-wmi
 
 == SYNOPSIS:
 
-  # The following code sample kills all processes of a given name, except the oldest (in this case, Notepad)
+  # The following code sample kills all processes of a given name (in this case, Notepad), except the oldest.
 
     require 'ruby-wmi'
 
