@@ -1,6 +1,7 @@
 ruby-wmi
     by Gordon Thiesfeld
     http://ruby-wmi.rubyforge.org/
+    gthiesfeld@gmail.com
 
 == DESCRIPTION:
 
