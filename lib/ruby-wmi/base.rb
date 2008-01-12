@@ -84,7 +84,6 @@ module WMI
         @c ||= WIN32OLE.new("WbemScripting.SWbemLocator")
         @privileges.each { |priv| @c.security_.privileges.add(priv, true) } if @privileges
         @c.ConnectServer(@host,@klass,@user,@password)
-
       end
 
       def set_connection(options)

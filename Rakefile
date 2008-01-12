@@ -4,7 +4,7 @@ require 'rubygems'
 require 'hoe'
 require './lib/ruby-wmi.rb'
 
-Hoe.new('ruby-wmi', Ruby_wmi::VERSION) do |p|
+Hoe.new('ruby-wmi', RubyWMI::VERSION) do |p|
   p.rubyforge_name = 'ruby-wmi'
   p.author = 'Gordon Thiesfeld'
   p.email = 'gthiesfeld@gmail.com'
