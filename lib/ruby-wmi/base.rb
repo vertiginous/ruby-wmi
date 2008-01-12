@@ -7,32 +7,35 @@ module WMI
       b = Base.connection
       b.SubclassesOf.map { |subclass| class_name = subclass.Path_.Class }
     end
-    
+
     alias :subclasses_of :subclasses
 
     def const_missing(name)
       self.const_set(name, Class.new(self::Base))
     end
     extend self
-    
+
   class Base
-      
+
     class << self
       def subclass_name
         self.name.split('::').last
       end
 
       def connection
-        c = WIN32OLE.new("WbemScripting.SWbemLocator")
-        c.ConnectServer(@host,@klass,@credentials[:user],@credentials[:passwd])
+        @c ||= WIN32OLE.new("WbemScripting.SWbemLocator")
+        @privileges.each { |priv| @c.security_.privileges.add(priv, true) } if @privileges
+        @c.ConnectServer(@host,@klass,@user,@password)
+
       end
-      
+
       def set_connection(options)
-        @host = options[:host] || nil
-        @klass = options[:class] || 'root/cimv2'
-        @credentials = options[:credentials] || {:user => nil,:passwd => nil}
+        @host = options[:host]
+        @klass = options[:class] || 'root\\cimv2'
+        @user,@password = options[:user], options[:password]
+        @privileges = options[:privileges]
       end
-      
+
       def find_by_wql(query)
         d = connection.ExecQuery(query)
         d.count # needed to check for errors.  Weird, but it works.
@@ -46,7 +49,7 @@ module WMI
           when :first; find_first(options)
         end
       end
-      
+
       def find_first(options={})
         find_all(options).first
       end
@@ -54,7 +57,7 @@ module WMI
       def find_all(options={})
         find_by_wql(construct_finder_sql(options))
       end
-      
+
       def construct_finder_sql(options)
         #~ scope = scope(:find)
         sql  = "SELECT #{options[:select] || '*'} "
@@ -71,7 +74,7 @@ module WMI
 
         sql
       end
-      
+
       def add_conditions!(sql, conditions, scope = :auto)
         #~ scope = scope(:find) if :auto == scope
         segments = []
@@ -79,10 +82,10 @@ module WMI
         #~ segments << conditions unless conditions.nil?
         #~ segments << type_condition unless descends_from_active_record?
         segments.compact!
-        sql << "WHERE (#{segments.join(") AND (")}) " unless segments.empty?
+        sql << "WHERE #{segments.join(") AND (")} " unless segments.empty?
         sql.gsub!("\\","\\\\\\")
       end
-      
+
       # Accepts an array, hash, or string of sql conditions and sanitizes
       # them into a valid SQL fragment.
       #   ["name='%s' and group_id='%s'", "foo'bar", 4]  returns  "name='foo''bar' and group_id='4'"
@@ -108,7 +111,7 @@ module WMI
         end.join(' AND ')
 
         #~ replace_bind_variables(conditions, attrs.values)
-      end 
+      end
     end
   end
 end
