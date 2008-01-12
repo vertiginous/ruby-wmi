@@ -23,9 +23,6 @@ module WMI
 
   alias :subclasses_of :subclasses
 
-  def const_missing(name)
-    self.const_set(name, Class.new(self::Base))
-  end
   extend self
 
   class Base
@@ -148,5 +145,11 @@ module WMI
         #~ replace_bind_variables(conditions, attrs.values)
       end
     end
+  end
+
+  private
+
+  def const_missing(name)
+    self.const_set(name, Class.new(self::Base))
   end
 end
