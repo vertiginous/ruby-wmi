@@ -17,7 +17,7 @@ module WMI
 
   def subclasses(options ={})
     Base.set_connection(options)
-    b = Base.connection
+    b = Base.send(:connection)
     b.SubclassesOf.map { |subclass| class_name = subclass.Path_.Class }
   end
 
@@ -74,6 +74,13 @@ module WMI
         find_by_wql(construct_finder_sql(options))
       end
 
+      def set_connection(options)
+        @host = options[:host]
+        @klass = options[:class] || 'root\\cimv2'
+        @user,@password = options[:user], options[:password]
+        @privileges = options[:privileges]
+      end
+
     private
 
       def subclass_name
@@ -84,13 +91,6 @@ module WMI
         @c ||= WIN32OLE.new("WbemScripting.SWbemLocator")
         @privileges.each { |priv| @c.security_.privileges.add(priv, true) } if @privileges
         @c.ConnectServer(@host,@klass,@user,@password)
-      end
-
-      def set_connection(options)
-        @host = options[:host]
-        @klass = options[:class] || 'root\\cimv2'
-        @user,@password = options[:user], options[:password]
-        @privileges = options[:privileges]
       end
 
       def construct_finder_sql(options)
