@@ -2,18 +2,31 @@ require 'win32ole'
 
 module WMI
 
-    def subclasses(options ={})
-      Base.set_connection(options)
-      b = Base.connection
-      b.SubclassesOf.map { |subclass| class_name = subclass.Path_.Class }
-    end
+  # Generic WMI exception class.
+  class WMIError < StandardError
+  end
 
-    alias :subclasses_of :subclasses
+  # invalid class error
+  class InvalidClass < WMIError
+  end
 
-    def const_missing(name)
-      self.const_set(name, Class.new(self::Base))
-    end
-    extend self
+  # invalid query
+  class InvalidQuery < WMIError
+  end
+
+
+  def subclasses(options ={})
+    Base.set_connection(options)
+    b = Base.connection
+    b.SubclassesOf.map { |subclass| class_name = subclass.Path_.Class }
+  end
+
+  alias :subclasses_of :subclasses
+
+  def const_missing(name)
+    self.const_set(name, Class.new(self::Base))
+  end
+  extend self
 
   class Base
 
@@ -38,7 +51,14 @@ module WMI
 
       def find_by_wql(query)
         d = connection.ExecQuery(query)
-        d.count # needed to check for errors.  Weird, but it works.
+        begin
+          d.count # needed to check for errors.  Weird, but it works.
+        rescue => error
+          case error.to_s
+          when /Invalid class/i : raise InvalidClass
+          when /Invalid query/i : raise InvalidQuery
+          end
+        end
         d.to_a
       end
 
