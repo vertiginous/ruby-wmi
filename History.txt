@@ -1,13 +1,15 @@
 == 0.2.2 / 2008-01-11
 
-  * minor enhancements
-    * supports privileges
+* 1 major enhancemenet
+  * supports privileges
 
-    	events = WMI::Win32_NTLogEvent.find(
-    	  :all, :privileges => [WMI::Security],
+      events = WMI::Win32_NTLogEvent.find(
+        :all, :privileges => [WMI::Privilege::Security],
         :conditions => {:logfile => 'Security', :eventcode => '517'} )
 
-    * added error handling for query errors and class name typos
+* minor enhancements
+    * added error handling for invalid queries and class name typos
+    * better documentation
 
 == 0.2.1 / 2007-07-19
 
