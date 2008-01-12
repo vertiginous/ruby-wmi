@@ -14,13 +14,21 @@ module WMI
   class InvalidQuery < WMIError
   end
 
-
+  # Returns an array conating all the WMI subclasses
+  # on a sytem.  Defaults to localhost
+  #
+  #   WMI.subclasses
+  #   => ["Win32_PrivilegesStatus", "Win32_TSNetworkAdapterSettingError", ...]
   def subclasses(options ={})
     Base.set_connection(options)
     b = Base.send(:connection)
     b.SubclassesOf.map { |subclass| class_name = subclass.Path_.Class }
   end
 
+  #  A more human readable version of subclasses when using options.
+  #
+  #   WMI.subclasses_of(:host => some_computer)
+  #   => ["Win32_PrivilegesStatus", "Win32_TSNetworkAdapterSettingError", ...]
   alias :subclasses_of :subclasses
 
   extend self
