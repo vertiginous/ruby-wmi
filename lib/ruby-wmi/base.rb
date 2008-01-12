@@ -31,6 +31,51 @@ module WMI
   class Base
 
     class << self
+
+      def find_by_wql(query)
+        d = connection.ExecQuery(query)
+        begin
+          d.count # needed to check for errors.  Weird, but it works.
+        rescue => error
+          case error.to_s
+          when /Invalid class/i : raise InvalidClass
+          when /Invalid query/i : raise InvalidQuery
+          end
+        end
+        d.to_a
+      end
+
+      #  WMI::Win32ComputerSystem.find(:all)
+      #    returns an array of Win32ComputerSystem objects
+      #
+      #  WMI::Win32ComputerSystem.find(:first)
+      #    returns a Win32ComputerSystem object
+      #
+      #  options:
+      #    :conditions - WHERE clause
+      #    :host       - computername, defaults to localhost
+      #    :class      - swebm class , defaults to 'root\\cimv2'
+      #    :privileges - see constants.rb for details
+      #    :user       - username (domain\\username)
+      #    :password   - password
+      def find(arg=:all, options={})
+        set_connection options
+        case arg
+          when :all; find_all(options)
+          when :first; find_first(options)
+        end
+      end
+
+      def find_first(options={})
+        find_all(options).first
+      end
+
+      def find_all(options={})
+        find_by_wql(construct_finder_sql(options))
+      end
+
+    private
+
       def subclass_name
         self.name.split('::').last
       end
@@ -47,35 +92,6 @@ module WMI
         @klass = options[:class] || 'root\\cimv2'
         @user,@password = options[:user], options[:password]
         @privileges = options[:privileges]
-      end
-
-      def find_by_wql(query)
-        d = connection.ExecQuery(query)
-        begin
-          d.count # needed to check for errors.  Weird, but it works.
-        rescue => error
-          case error.to_s
-          when /Invalid class/i : raise InvalidClass
-          when /Invalid query/i : raise InvalidQuery
-          end
-        end
-        d.to_a
-      end
-
-      def find(arg=:all, options={})
-        set_connection options
-        case arg
-          when :all; find_all(options)
-          when :first; find_first(options)
-        end
-      end
-
-      def find_first(options={})
-        find_all(options).first
-      end
-
-      def find_all(options={})
-        find_by_wql(construct_finder_sql(options))
       end
 
       def construct_finder_sql(options)
