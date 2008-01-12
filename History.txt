@@ -1,4 +1,4 @@
-== 0.3.0 / 2008-01-11
+== 0.2.2 / 2008-01-11
 
   * minor enhancements
     * supports privileges

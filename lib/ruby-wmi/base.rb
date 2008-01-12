@@ -6,11 +6,11 @@ module WMI
   class WMIError < StandardError
   end
 
-  # invalid class error
+  # Invalid Class exception class.
   class InvalidClass < WMIError
   end
 
-  # invalid query
+  # Invalid Query exception class.
   class InvalidQuery < WMIError
   end
 

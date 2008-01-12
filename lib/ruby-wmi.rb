@@ -1,5 +1,5 @@
 class Ruby_wmi
-  VERSION = '0.3.0'
+  VERSION = '0.2.2'
 end
 
 $:.unshift(File.dirname(__FILE__)) unless
@@ -8,5 +8,3 @@ $:.unshift(File.dirname(__FILE__)) unless
 require 'ruby-wmi/core_ext'
 require 'ruby-wmi/constants'
 require 'ruby-wmi/base'
-require 'ruby-wmi/cim'
-require 'ruby-wmi/win32'
