@@ -25,22 +25,28 @@
 <div id="main">
 	<div id="content">
 		<div class="article">
-         <h2>What is it?</h2>
-         <p><a href="<%= @url[1].lstrip %>">ruby-wmi</a> is an <a href="http://api.rubyonrails.org/classes/ActiveRecord/Base.html">ActiveRecord</a> style interface for Microsoft's Windows
-          Management Instrumentation provider.
-          </p>
-          <p>Many of the methods in WMI::Base are borrowed directly, or with some
-          modification from <a href="http://api.rubyonrails.org/classes/ActiveRecord/Base.html">ActiveRecord</a>.
-          </p>
-          <p>The major tool in this library is the #find method.  For more
-          information, see WMI::Base.
-          </p>
-          <p>There is also a WMI.sublasses method included for reflection.</p>
-
-
+      <h2>What is it?</h2>
+      <p><a href="<%= @url[1].lstrip %>">ruby-wmi</a> is an <a href="http://api.rubyonrails.org/classes/ActiveRecord/Base.html">ActiveRecord</a> style interface for Microsoft's Windows
+      Management Instrumentation provider.
+      </p>
+      <p>Many of the methods in WMI::Base are borrowed directly, or with some
+      modification from <a href="http://api.rubyonrails.org/classes/ActiveRecord/Base.html">ActiveRecord</a>.
+      </p>
+      <p>The major tool in this library is the #find method.  For more
+      information, see WMI::Base.
+      </p>
+      <p>There is also a WMI.sublasses method included for reflection.</p>
 		</div>
-		<div class="article">
-        <% @samples.each do |file, code| %>
+    <div class="article">
+    <h2>How do I install it?</h2>
+      <ul>
+        <li>gem install ruby-wmi</li>
+      </ul>
+		</div>
+
+    <div class="article">
+      <h2>What does it look like?</h2>
+      <% @samples.each do |file, code| %>
             <ul>
             <li><%= file %>
               <blockquote>

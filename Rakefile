@@ -47,13 +47,16 @@ Hoe.new('ruby-wmi', RubyWMI::VERSION) do |p|
                        '--main' , 'README.txt' ,
                        '--line-numbers', '--template',  File.join(Gem::GemPathSearcher.new.find('allison').full_gem_path,'lib','allison')]
                   }
-  p.download_url = 'http://rubyforge.org/frs/?group_id=4083&release_id=18032'
+  p.download_url = 'http://rubyforge.org/projects/ruby-wmi/'
 
 end
 
 
 
-
-
+# pscp -r -load rubyforge web/public/images vertiginal@rubyforge.org:/var/www/gforge-projects/ruby-wmi/images
+# needed tasks
+#   * rdoc fixed.
+#   * clobber_webpage
+#   * publish_website
 
 # vim: syntax=Ruby
