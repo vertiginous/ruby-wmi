@@ -5,17 +5,17 @@ ruby-wmi
 
 == DESCRIPTION:
 
-    ruby-wmi is an ActiveRecord style interface for Microsoft's Windows
-    Management Instrumentation provider.
+  ruby-wmi is an ActiveRecord style interface for Microsoft's Windows
+  Management Instrumentation provider.
 
-    Many of the methods in WMI::Base are borrowed directly, or with some
-    modification from ActiveRecord.
-      http://api.rubyonrails.org/classes/ActiveRecord/Base.html
+  Many of the methods in WMI::Base are borrowed directly, or with some
+  modification from ActiveRecord.
+    http://api.rubyonrails.org/classes/ActiveRecord/Base.html
 
-    The major tool in this library is the #find method.  For more
-    information, see WMI::Base.
+  The major tool in this library is the #find method.  For more
+  information, see WMI::Base.
 
-    There is also a WMI.sublasses method included for reflection.
+  There is also a WMI.sublasses method included for reflection.
 
 == SYNOPSIS:
 
@@ -33,8 +33,8 @@ ruby-wmi
 
 == REQUIREMENTS:
 
-    Hoe
-    Allison
+    Windows 2000 or newer
+    Ruby 1.8
 
 == INSTALL:
 

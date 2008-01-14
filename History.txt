@@ -2,11 +2,11 @@
 
 * 1 major enhancemenet
   * supports privileges
-
+    <code>
       events = WMI::Win32_NTLogEvent.find(
         :all, :privileges => [WMI::Privilege::Security],
         :conditions => {:logfile => 'Security', :eventcode => '517'} )
-
+    </code>
 * minor enhancements
     * added error handling for invalid queries and class name typos
     * better documentation
