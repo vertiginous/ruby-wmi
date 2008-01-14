@@ -5,16 +5,29 @@ ruby-wmi
 
 == DESCRIPTION:
 
-    ruby-wmi is an ActiveRecord style interface for Microsoft's Windows Management Instrumentation provider.
+    ruby-wmi is an ActiveRecord style interface for Microsoft's Windows
+    Management Instrumentation provider.
+
+    Many of the methods in WMI::Base are borrowed directly, or with some
+    modification from ActiveRecord.
+      http://api.rubyonrails.org/classes/ActiveRecord/Base.html
+
+    The major tool in this library is the #find method.  For more
+    information, see WMI::Base.
+
+    There is also a WMI.sublasses method included for reflection.
 
 == SYNOPSIS:
 
-  # The following code sample kills all processes of a given name (in this case, Notepad), except the oldest.
+  # The following code sample kills all processes of a given name
+  # (in this case, Notepad), except the oldest.
 
     require 'ruby-wmi'
 
-    processes = WMI::Win32_Process.find(:all, :conditions => { :name => 'Notepad.exe' })
-    morituri = processes.sort_by{|p| p.CreationDate } #those who are about to die
+    procs = WMI::Win32_Process.find(:all,
+                                    :conditions => { :name => 'Notepad.exe' }
+                                   )
+    morituri = procs.sort_by{|p| p.CreationDate } #those who are about to die
     morituri.shift
     morituri.each{|p| p.terminate }
 
@@ -24,11 +37,6 @@ ruby-wmi
 == INSTALL:
 
   gem install ruby-wmi
-
-== TODO:
-
-  # fix licensing (attribution to Active_Record authors)
-  # fix documentation.
 
 == LICENSE:
 

@@ -13,9 +13,12 @@ Hoe.new('ruby-wmi', RubyWMI::VERSION) do |p|
   p.url = p.paragraphs_of('README.txt', 0).first.split(/\n/)[1..-1]
   p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
   p.need_tar = false
-  p.spec_extras = {:rdoc_options => ['--title' , 'ruby-wmi -- WMI, easier' ,
+  p.spec_extras = {
+                  :requirements => ['allison', '>= 2.0.2'],
+                  :rdoc_options => ['--title' , 'ruby-wmi -- WMI queries, easier' ,
                        '--main' , 'README.txt' ,
-                       '--line-numbers']}
+                       '--line-numbers', '--template',  File.join(Gem::GemPathSearcher.new.find('allison').full_gem_path,'lib','allison')]
+                  }
 
 end
 

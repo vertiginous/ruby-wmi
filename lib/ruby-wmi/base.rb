@@ -36,9 +36,13 @@ module WMI
   extend self
 
   class Base
+  # Many of the methods in Base are borrowed directly, or with some modification from ActiveRecord
+  #   http://api.rubyonrails.org/classes/ActiveRecord/Base.html
 
     class << self
 
+      # #find_by_wql currently only works when called through #find
+      # it may stay like that too.  I haven't decided.
       def find_by_wql(query)
         d = connection.ExecQuery(query)
         begin
@@ -59,10 +63,21 @@ module WMI
       #    returns a Win32ComputerSystem object
       #
       #  options:
-      #    :conditions - WHERE clause
+      #
+      #    :conditions
+      #
+      #     Conditions can either be specified as a string, array, or hash representing the WHERE-part of an SQL statement.
+      #     The array form is to be used when the condition input is tainted and requires sanitization. The string form can
+      #     be used for statements that don't involve tainted data. The hash form works much like the array form, except
+      #     only equality and range is possible. Examples:
+      #
+      #       Win32ComputerSystem.find(:all, :conditions => {:drivetype => 3} )  # Hash
+      #       Win32ComputerSystem.find(:all, :conditions => [:drivetype, 3] )   # Array
+      #       Win32ComputerSystem.find(:all, :conditions => 'drivetype = 3' )   # String
+      #
       #    :host       - computername, defaults to localhost
       #    :class      - swebm class , defaults to 'root\\cimv2'
-      #    :privileges - see constants.rb for details
+      #    :privileges - see WMI::Privilege for a list of privileges
       #    :user       - username (domain\\username)
       #    :password   - password
       def find(arg=:all, options={})
