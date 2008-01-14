@@ -25,6 +25,11 @@ ruby-wmi
 
   gem install ruby-wmi
 
+== TODO:
+
+  # fix licensing (attribution to Active_Record authors)
+  # fix documentation.
+
 == LICENSE:
 
 (The MIT License)
