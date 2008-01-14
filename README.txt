@@ -33,6 +33,8 @@ ruby-wmi
 
 == REQUIREMENTS:
 
+    Hoe
+    Allison
 
 == INSTALL:
 
