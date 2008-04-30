@@ -1,5 +1,5 @@
 class RubyWMI
-  VERSION = '0.2.2'
+  VERSION = '0.3.0'
 end
 
 $:.unshift(File.dirname(__FILE__)) unless

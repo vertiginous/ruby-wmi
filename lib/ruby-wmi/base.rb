@@ -40,7 +40,7 @@ module WMI
   #   http://api.rubyonrails.org/classes/ActiveRecord/Base.html
 
     class << self
-
+    
       # #find_by_wql currently only works when called through #find
       # it may stay like that too.  I haven't decided.
       def find_by_wql(query)
@@ -85,15 +85,20 @@ module WMI
         case arg
           when :all; find_all(options)
           when :first; find_first(options)
+          when :last; find_last(options)
         end
       end
 
-      def find_first(options={})
-        find_all(options).first
+      def last(options={})
+        find(:last, options)
       end
-
-      def find_all(options={})
-        find_by_wql(construct_finder_sql(options))
+      
+      def first(options={})
+        find(:first, options)
+      end
+      
+      def all(options={})
+        find(:all, options)
       end
 
       def set_connection(options)
@@ -103,16 +108,32 @@ module WMI
         @privileges = options[:privileges]
       end
 
+      def set_wmi_class_name(name)
+        @subclass_name = name
+      end
+
     private
 
       def subclass_name
-        self.name.split('::').last
+        @subclass_name ||= self.name.split('::').last
       end
 
       def connection
         @c ||= WIN32OLE.new("WbemScripting.SWbemLocator")
         @privileges.each { |priv| @c.security_.privileges.add(priv, true) } if @privileges
         @c.ConnectServer(@host,@klass,@user,@password)
+      end
+
+      def find_first(options={})
+        find_all(options).first
+      end
+      
+      def find_last(options={})
+        find_all(options).last
+      end
+
+      def find_all(options={})
+        find_by_wql(construct_finder_sql(options))
       end
 
       def construct_finder_sql(options)
