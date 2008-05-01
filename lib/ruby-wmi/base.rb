@@ -60,7 +60,10 @@ module WMI
       #    returns an array of Win32ComputerSystem objects
       #
       #  WMI::Win32ComputerSystem.find(:first)
-      #    returns a Win32ComputerSystem object
+      #    returns the first Win32ComputerSystem object
+      #
+      #  WMI::Win32ComputerSystem.find(:last)
+      #    returns the last Win32ComputerSystem object
       #
       #  options:
       #
@@ -89,25 +92,28 @@ module WMI
         end
       end
 
+      # an alias for find(:last)      
       def last(options={})
         find(:last, options)
       end
       
+      # an alias for find(:first)      
       def first(options={})
         find(:first, options)
       end
       
+      # an alias for find(:all)
       def all(options={})
         find(:all, options)
       end
 
-      def set_connection(options)
+      def set_connection(options={})
         @host = options[:host]
         @klass = options[:class] || 'root\\cimv2'
         @user,@password = options[:user], options[:password]
         @privileges = options[:privileges]
       end
-
+      
       def set_wmi_class_name(name)
         @subclass_name = name
       end

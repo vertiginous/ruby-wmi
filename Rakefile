@@ -42,16 +42,13 @@ Hoe.new('ruby-wmi', RubyWMI::VERSION) do |p|
   p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
   p.need_tar = false
   p.spec_extras = {
-                  :requirements => ['allison', '>= 2.0.2'],
                   :rdoc_options => ['--title' , p.title ,
                        '--main' , 'README.txt' ,
-                       '--line-numbers', '--template',  File.join(Gem::GemPathSearcher.new.find('allison').full_gem_path,'lib','allison')]
+                       '--line-numbers']
                   }
   p.download_url = 'http://rubyforge.org/projects/ruby-wmi/'
 
 end
-
-
 
 # pscp -r -load rubyforge web/public/images vertiginal@rubyforge.org:/var/www/gforge-projects/ruby-wmi/images
 # needed tasks
