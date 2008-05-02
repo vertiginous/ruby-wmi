@@ -14,7 +14,8 @@ class Hoe
     old_define_tasks
 
     desc "Generate webpage"
-    task :generate_web do
+    task :generate_web => [:docs] do 
+      mkdir_p 'web/public'
       require 'uv'
       require 'erubis'
 
@@ -22,7 +23,7 @@ class Hoe
         html = Uv.parse(  File.read(file), "xhtml", "ruby", false, "lazy")
         [file, html]
       end
-
+      
       input = File.read('web/templates/index.html.erb')
       eruby = Erubis::Eruby.new(input)    # create Eruby object
       File.open('web/public/index.html', 'w+'){|f| f.puts eruby.result(binding()) }

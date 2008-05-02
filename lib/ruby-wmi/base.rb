@@ -118,11 +118,11 @@ module WMI
         @subclass_name = name
       end
 
-    private
-
       def subclass_name
         @subclass_name ||= self.name.split('::').last
       end
+
+    private
 
       def connection
         @c ||= WIN32OLE.new("WbemScripting.SWbemLocator")
