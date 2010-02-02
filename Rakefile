@@ -4,37 +4,37 @@ require 'rubygems'
 require 'hoe'
 require './lib/ruby-wmi.rb'
 
-class Hoe
-  attr_accessor :download_url
-  attr_accessor :title
-  attr_accessor :tagline
+# class Hoe
+#   attr_accessor :download_url
+#   attr_accessor :title
+#   attr_accessor :tagline
 
-  alias_method :old_define_tasks, :define_tasks
-  def define_tasks
-    old_define_tasks
+#   alias_method :old_define_tasks, :define_tasks
+#   def define_tasks
+#     old_define_tasks
 
-    desc "Generate webpage"
-    task :generate_web => [:docs] do 
-      mkdir_p 'web/public'
-      require 'uv'
-      require 'erubis'
+#     desc "Generate webpage"
+#     task :generate_web => [:docs] do 
+#       mkdir_p 'web/public'
+#       require 'uv'
+#       require 'erubis'
 
-      @samples = Dir['samples/*.rb'].map do |file|
-        html = Uv.parse(  File.read(file), "xhtml", "ruby", false, "lazy")
-        [file, html]
-      end
+#       @samples = Dir['samples/*.rb'].map do |file|
+#         html = Uv.parse(  File.read(file), "xhtml", "ruby", false, "lazy")
+#         [file, html]
+#       end
       
-      input = File.read('web/templates/index.html.erb')
-      eruby = Erubis::Eruby.new(input)    # create Eruby object
-      File.open('web/public/index.html', 'w+'){|f| f.puts eruby.result(binding()) }
-    end
-  end
-end
+#       input = File.read('web/templates/index.html.erb')
+#       eruby = Erubis::Eruby.new(input)    # create Eruby object
+#       File.open('web/public/index.html', 'w+'){|f| f.puts eruby.result(binding()) }
+#     end
+#   end
+# end
 
 Hoe.new('ruby-wmi', RubyWMI::VERSION) do |p|
   p.rubyforge_name = 'ruby-wmi'
-  p.tagline = 'WMI queries, easier'
-  p.title = "#{p.name} -- #{p.tagline}"
+  # p.tagline = 'WMI queries, easier'
+  # p.title = "#{p.name} -- #{p.tagline}"
   p.author = 'Gordon Thiesfeld'
   p.email = 'gthiesfeld@gmail.com'
   p.summary = "ruby-wmi is an ActiveRecord style interface for Microsoft\'s Windows Management Instrumentation provider."
@@ -42,12 +42,19 @@ Hoe.new('ruby-wmi', RubyWMI::VERSION) do |p|
   p.url = p.paragraphs_of('README.txt', 0).first.split(/\n/)[1..-1]
   p.changes = p.paragraphs_of('History.txt', 0..1).join("\n\n")
   p.need_tar = false
-  p.spec_extras = {
-                  :rdoc_options => ['--title' , p.title ,
-                       '--main' , 'README.txt' ,
-                       '--line-numbers']
-                  }
-  p.download_url = 'http://rubyforge.org/projects/ruby-wmi/'
+  # p.spec_extras = {
+  #                 :rdoc_options => ['--title' , p.title ,
+  #                      '--main' , 'README.txt' ,
+  #                      '--line-numbers']
+  #                 }
+  # p.download_url = 'http://rubyforge.org/projects/ruby-wmi/'
+
+end
+
+
+task :irb do
+
+  sh "irb -r lib/ruby-wmi"
 
 end
 
