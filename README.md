@@ -1,26 +1,26 @@
-ruby-wmi
-http://ruby-wmi.rubyforge.org/
-by Gordon Thiesfeld
-gthiesfeld@gmail.com
+# Description
 
-== DESCRIPTION:
+ruby-wmi is an ActiveRecord style interface for Microsoft's Windows
+Management Instrumentation provider.
 
-  ruby-wmi is an ActiveRecord style interface for Microsoft's Windows
-  Management Instrumentation provider.
+Many of the methods in WMI::Base are borrowed directly, or with some
+modification from ActiveRecord.
+  http://api.rubyonrails.org/classes/ActiveRecord/Base.html
 
-  Many of the methods in WMI::Base are borrowed directly, or with some
-  modification from ActiveRecord.
-    http://api.rubyonrails.org/classes/ActiveRecord/Base.html
+The major tool in this library is the #find method.  For more
+information, see WMI::Base.
 
-  The major tool in this library is the #find method.  For more
-  information, see WMI::Base.
+There is also a WMI.sublasses method included for reflection.
 
-  There is also a WMI.sublasses method included for reflection.
+# Requirements
 
-== SYNOPSIS:
+* Windows 2000 or newer
+* Ruby 1.8 / 1.9
 
-  # The following code sample kills all processes of a given name
-  # (in this case, Notepad), except the oldest.
+# Synopsis
+
+The following code sample kills all processes of a given name 
+(in this case, Notepad), except the oldest.
 
     require 'ruby-wmi'
 
@@ -31,20 +31,17 @@ gthiesfeld@gmail.com
     morituri.shift
     morituri.each{|p| p.terminate }
 
-== REQUIREMENTS:
+# Installation
 
-    Windows 2000 or newer
-    Ruby 1.8
+    $ gem install ruby-wmi
 
-== INSTALL:
+# License and Authors
 
-  gem install ruby-wmi
+Maintainer:: Jamie Winsor (<jamie@vialstudios.com>)
 
-== LICENSE:
+Original Author:: Gordon Thiesfeld (<gthiesfeld@gmail.com>)
 
 (The MIT License)
-
-Copyright (c) 2007 Gordon Thiesfeld
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
