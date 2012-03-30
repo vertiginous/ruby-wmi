@@ -73,13 +73,13 @@ class Default < Thor
     end
     
     def tag_version
-      sh "git tag -a -m \"Version #{current_version}\" #{current_version}"
-      say "Tagged: #{current_version}", :green
+      sh "git tag -a -m \"Version #{RubyWMI::VERSION}\" #{RubyWMI::VERSION}"
+      say "Tagged: #{RubyWMI::VERSION}", :green
       yield if block_given?
       sh "git push --tags"
     rescue => e
-      say "Untagging: #{current_version} due to error", :red
-      sh_with_excode "git tag -d #{current_version}"
+      say "Untagging: #{RubyWMI::VERSION} due to error", :red
+      sh_with_excode "git tag -d #{RubyWMI::VERSION}"
       say e, :red
       exit 1
     end
