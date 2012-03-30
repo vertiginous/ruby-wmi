@@ -11,7 +11,8 @@ class Default < Thor
   def build
     invoke :clean
     
-    sh("gem build -V '#{source_root.join("ruby-wmi.gemspec")}'", pkg_path)
+    sh("gem build -V '#{source_root.join("ruby-wmi.gemspec")}'", source_root)
+    FileUtils.mv(Dir.glob("*.gem"), "pkg/")
   rescue => e
     say e, :red
     exit 1
