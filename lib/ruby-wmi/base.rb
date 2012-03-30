@@ -2,7 +2,7 @@ require 'win32ole'
 
 WIN32OLE.codepage = WIN32OLE::CP_UTF8
 
-module WMI
+module RubyWMI
 
   # Generic WMI exception class.
   class WMIError < StandardError
