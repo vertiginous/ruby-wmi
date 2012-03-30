@@ -1,5 +1,6 @@
 require 'ruby-wmi/version'
 require 'ruby-wmi/core_ext'
+require 'ruby-wmi/errors'
 require 'win32ole'
 
 WIN32OLE.codepage = WIN32OLE::CP_UTF8
@@ -7,26 +8,6 @@ WIN32OLE.codepage = WIN32OLE::CP_UTF8
 module RubyWMI
   autoload :privilege, 'ruby-wmi/privilege'
   autoload :base, 'ruby-wmi/base'
-
-  # Generic WMI exception class.
-  class WMIError < StandardError
-  end
-
-  # Invalid Class exception class.
-  class InvalidClass < WMIError
-  end
-
-  # Invalid Query exception class.
-  class InvalidQuery < WMIError
-  end
-
-  # Invalid NameSpace exception class.
-  class InvalidNameSpace < WMIError
-  end
-  
-  # Read only exception class.
-  class ReadOnlyError < WMIError
-  end
 
   # Returns an array containing all the WMI subclasses
   # on a sytem.  Defaults to localhost
