@@ -1,104 +1,8 @@
-require 'win32ole'
-
-WIN32OLE.codepage = WIN32OLE::CP_UTF8
-
 module RubyWMI
-
-  # Generic WMI exception class.
-  class WMIError < StandardError
-  end
-
-  # Invalid Class exception class.
-  class InvalidClass < WMIError
-  end
-
-  # Invalid Query exception class.
-  class InvalidQuery < WMIError
-  end
-
-  # Invalid NameSpace exception class.
-  class InvalidNameSpace < WMIError
-  end
-  
-  # Read only exception class.
-  class ReadOnlyError < WMIError
-  end
-
-  # Returns an array containing all the WMI subclasses
-  # on a sytem.  Defaults to localhost
-  #
-  #   WMI.subclasses
-  #   => ["Win32_PrivilegesStatus", "Win32_TSNetworkAdapterSettingError", ...]
-  #
-  #  For a more human readable version of subclasses when using options:
-  #
-  #   WMI.subclasses_of(:host => 'some_computer')
-  #   => ["Win32_PrivilegesStatus", "Win32_TSNetworkAdapterSettingError", ...]
-  #
-  #   WMI.subclasses_of(
-  #      :host => :some_computer,
-  #      :namespace => "root\\Microsoft\\SqlServer\\ComputerManagement"
-  #    )
-  def subclasses(options ={})
-    options.merge!(:method => :SubclassesOf)
-    instances_of(options).
-    map{ |subclass| subclass.Path_.Class }
-  end
-  alias :subclasses_of :subclasses
-
-  # Returns an array containing all the WMI providers
-  # on a sytem.  Defaults to localhost
-  #
-  #   WMI.providers
-  #
-  #  For a more human readable version of providers when using options:
-  #
-  #   WMI.providers_of(:host => :some_computer)
-  def providers(options ={})
-    options.merge!(:method => :InstancesOf, :instance => "__Win32Provider")
-    instances_of(options).
-    map{ |provider| provider.name }.compact
-  end
-  alias :providers_of :providers
-
-  # Returns an array containing all the WMI namespaces
-  # on a sytem.  Defaults to localhost
-  #
-  #   WMI.namespaces
-  #
-  #  For a more human readable version of namespaces when using options:
-  #
-  #   WMI.namespaces_of(:host => :some_computer)
-  #
-  #   WMI.namespaces_of(:namespace => "root\\Microsoft")
-  def namespaces(options ={})
-    options.merge!(:method => :InstancesOf, :instance => "__NAMESPACE")
-    options[:namespace] ||= 'root'
-    instances_of(options).
-    map{ |namespace|
-      namespace = "#{options[:namespace]}\\#{namespace.name}"
-      ns = namespaces(options.merge(:namespace => namespace)) rescue nil
-      [namespace, ns]
-    }.flatten
-  end
-  alias :namespaces_of :namespaces
-
-  def instances_of(options)
-    Base.set_connection(options)
-    conn = Base.send(:connection)
-    items = namespaces = conn.send(options[:method], options[:instance])
-    Base.send(:clear_connection_options)
-    items
-  end
-
-  extend self
-
-  class Base
   # Many of the methods in Base are borrowed directly, or with some modification from ActiveRecord
   #   http://api.rubyonrails.org/classes/ActiveRecord/Base.html
-
+  class Base
     class << self    
- 
       # #find_by_wql currently only works when called through #find
       # it may stay like that too.  I haven't decided.
       def find_by_wql(query)
@@ -279,164 +183,164 @@ module RubyWMI
         @@logger = logger
       end
 
-    private
+      private
 
-      def connection
-        @c ||= WIN32OLE.new("WbemScripting.SWbemLocator")
-        @privileges.each { |priv| @c.security_.privileges.add(priv, true) } if @privileges
-        log_connection if logger
-        @c.ConnectServer(@host,@namespace,@user,@password)
-      end
-      
-      # logs SWbemLocator.ConnectServer parameters
-      # default parameters aren't logged.
-      def log_connection
-        msg =  ""
-        msg <<  "Host: #{@host.inspect}, "              unless @host.empty?
-        msg << "Namespace: #{@namespace.inspect}, "     unless @namespace == "root\\cimv2" && @host.empty?
-        msg << "User: #{@user.inspect}, "               if @user
-        msg << "Password: #{@password.gsub(/./,'#')}, " if @password
-        msg << "Privileges: #{@privileges.inspect}"     if @privileges
-        logger.debug msg unless msg.empty?
-      end
-
-      def find_first(options={})
-        find_all(options).first
-      end
-      
-      def find_last(options={})
-        find_all(options).last
-      end
-
-      def find_all(options={})
-        find_by_wql(construct_finder_sql(options))
-      end
-
-      def construct_finder_sql(options)
-        [
-          select(options[:select]),
-          from(options[:from]),
-          conditions(options[:conditions], nil),
-          group(options[:group])
-         ].compact.join(' ')
-      end
-      
-      def select(*selectors)
-        selectors = selectors.compact.empty? ? '*' : selectors.flatten.map{|i| camelize(i) }.join(', ')
-        "SELECT #{selectors}"
-      end
-      
-      def from(wmi_class)
-        "FROM #{wmi_class || subclass_name}"
-      end
-
-      def conditions(conditions, scope = :auto)
-        segments = []
-        segments << sanitize_sql(conditions) unless conditions.nil?
-        segments.compact!
-        "WHERE #{segments.join(") AND (")}".gsub(/\\/, '\&\&') unless segments.empty?
-      end
-      
-      def group(items)
-        "GROUP BY #{items}" if items
-      end
-
-      # Accepts an array, hash, or string of sql conditions and sanitizes
-      # them into a valid SQL fragment.
-      #   ["name='%s' and device_id='%s'", "foo'bar", 4]  returns  "name='foo''bar' AND DeviceId='4'"
-      #   { :name => "foo'bar", :device_id => 4 }  returns "name='foo''bar' AND DeviceId='4'"
-      #   "name='foo''bar' AND DeviceId='4'" returns "name='foo''bar' AND DeviceId='4'"
-      def sanitize_sql(condition)
-        case condition
-          when Array
-            sanitize_sql_array(condition)
-          when Hash
-            sanitize_sql_hash(condition)
-          else        condition
+        def connection
+          @c ||= WIN32OLE.new("WbemScripting.SWbemLocator")
+          @privileges.each { |priv| @c.security_.privileges.add(priv, true) } if @privileges
+          log_connection if logger
+          @c.ConnectServer(@host,@namespace,@user,@password)
         end
-      end
-
-      # Sanitizes a hash of attribute/value pairs into SQL conditions.
-      #   { :name => "foo'bar", :device_id => 4 }
-      #     # => "name='foo''bar' AND DeviceId= 4"
-      #   { :status => nil, :device_id => [1,2,3] }
-      #     # => "status IS NULL AND DeviceId = '1' OR DeviceId = '2' OR DeviceId = '3'"
-      def sanitize_sql_hash(attrs)
-        conditions = attrs.map do |attr, value|
-          attribute_condition(camelize(attr), value)
-        end.join(' AND ')
-        replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
-      end
-      
-      def sanitize_sql_array(ary)
-        statement, *values = ary
-        if values.first.is_a?(Hash) and statement =~ /:\w+/
-          replace_named_bind_variables(statement, values.first)
-        elsif statement.include?('?')
-          replace_bind_variables(statement, values)
-        else
-          statement % values.collect { |value| "'#{value}'" }
+        
+        # logs SWbemLocator.ConnectServer parameters
+        # default parameters aren't logged.
+        def log_connection
+          msg =  ""
+          msg <<  "Host: #{@host.inspect}, "              unless @host.empty?
+          msg << "Namespace: #{@namespace.inspect}, "     unless @namespace == "root\\cimv2" && @host.empty?
+          msg << "User: #{@user.inspect}, "               if @user
+          msg << "Password: #{@password.gsub(/./,'#')}, " if @password
+          msg << "Privileges: #{@privileges.inspect}"     if @privileges
+          logger.debug msg unless msg.empty?
         end
-      end 
-      
-      def replace_bind_variables(statement, values) #:nodoc:
-        raise WMIError.new("Mismatched arity #{statement}:#{values.inspect}") unless statement.count('?') == values.size
-        bound = values.dup
-        statement.gsub('?') { quote(bound.shift) }
-      end
-      
-      def attribute_condition(column_name, argument)
-        case argument
-          when nil   then "#{column_name} IS ?"
-          when Array then argument.map{|a| "#{column_name} = ? "}.join(" OR ")
-          when Range then if argument.exclude_end?
-                            "#{column_name} >= ? AND #{column_name} < ?"
-                          else
-                            "#{column_name} >= ? AND #{column_name} <= ?"
-                          end
-          else           
-            "#{column_name} = ?"
+
+        def find_first(options={})
+          find_all(options).first
         end
-      end
-      
-      def expand_range_bind_variables(bind_vars)
-        expanded = []
+        
+        def find_last(options={})
+          find_all(options).last
+        end
 
-        bind_vars.each do |var|
-          next if var.is_a?(Hash)
+        def find_all(options={})
+          find_by_wql(construct_finder_sql(options))
+        end
 
-          if var.is_a?(Range)
-            expanded << var.first
-            expanded << var.last
-          elsif var.is_a?(Array)
-            expanded = var
-          else
-            expanded << var
+        def construct_finder_sql(options)
+          [
+            select(options[:select]),
+            from(options[:from]),
+            conditions(options[:conditions], nil),
+            group(options[:group])
+           ].compact.join(' ')
+        end
+        
+        def select(*selectors)
+          selectors = selectors.compact.empty? ? '*' : selectors.flatten.map{|i| camelize(i) }.join(', ')
+          "SELECT #{selectors}"
+        end
+        
+        def from(wmi_class)
+          "FROM #{wmi_class || subclass_name}"
+        end
+
+        def conditions(conditions, scope = :auto)
+          segments = []
+          segments << sanitize_sql(conditions) unless conditions.nil?
+          segments.compact!
+          "WHERE #{segments.join(") AND (")}".gsub(/\\/, '\&\&') unless segments.empty?
+        end
+        
+        def group(items)
+          "GROUP BY #{items}" if items
+        end
+
+        # Accepts an array, hash, or string of sql conditions and sanitizes
+        # them into a valid SQL fragment.
+        #   ["name='%s' and device_id='%s'", "foo'bar", 4]  returns  "name='foo''bar' AND DeviceId='4'"
+        #   { :name => "foo'bar", :device_id => 4 }  returns "name='foo''bar' AND DeviceId='4'"
+        #   "name='foo''bar' AND DeviceId='4'" returns "name='foo''bar' AND DeviceId='4'"
+        def sanitize_sql(condition)
+          case condition
+            when Array
+              sanitize_sql_array(condition)
+            when Hash
+              sanitize_sql_hash(condition)
+            else        condition
           end
         end
 
-        expanded
-      end
-      
-      def quote(item)
-        case item
-          when NilClass
-            "NULL" 
-          when Time
-            "'#{item.to_swbem_date_time}'"
-          else  
-            "'#{item}'"
+        # Sanitizes a hash of attribute/value pairs into SQL conditions.
+        #   { :name => "foo'bar", :device_id => 4 }
+        #     # => "name='foo''bar' AND DeviceId= 4"
+        #   { :status => nil, :device_id => [1,2,3] }
+        #     # => "status IS NULL AND DeviceId = '1' OR DeviceId = '2' OR DeviceId = '3'"
+        def sanitize_sql_hash(attrs)
+          conditions = attrs.map do |attr, value|
+            attribute_condition(camelize(attr), value)
+          end.join(' AND ')
+          replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
         end
-      end
-         
-      def camelize(string)
-        string.to_s.gsub(/(?:^|_)(.)/) { $1.upcase }    
-      end  
-      
-      def underscore(string)
-        string.to_s.gsub(/::/, '/').gsub('_', '___').gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').tr("-", "_").downcase
-      end
+        
+        def sanitize_sql_array(ary)
+          statement, *values = ary
+          if values.first.is_a?(Hash) and statement =~ /:\w+/
+            replace_named_bind_variables(statement, values.first)
+          elsif statement.include?('?')
+            replace_bind_variables(statement, values)
+          else
+            statement % values.collect { |value| "'#{value}'" }
+          end
+        end 
+        
+        def replace_bind_variables(statement, values) #:nodoc:
+          raise WMIError.new("Mismatched arity #{statement}:#{values.inspect}") unless statement.count('?') == values.size
+          bound = values.dup
+          statement.gsub('?') { quote(bound.shift) }
+        end
+        
+        def attribute_condition(column_name, argument)
+          case argument
+            when nil   then "#{column_name} IS ?"
+            when Array then argument.map{|a| "#{column_name} = ? "}.join(" OR ")
+            when Range then if argument.exclude_end?
+                              "#{column_name} >= ? AND #{column_name} < ?"
+                            else
+                              "#{column_name} >= ? AND #{column_name} <= ?"
+                            end
+            else           
+              "#{column_name} = ?"
+          end
+        end
+        
+        def expand_range_bind_variables(bind_vars)
+          expanded = []
+
+          bind_vars.each do |var|
+            next if var.is_a?(Hash)
+
+            if var.is_a?(Range)
+              expanded << var.first
+              expanded << var.last
+            elsif var.is_a?(Array)
+              expanded = var
+            else
+              expanded << var
+            end
+          end
+
+          expanded
+        end
+        
+        def quote(item)
+          case item
+            when NilClass
+              "NULL" 
+            when Time
+              "'#{item.to_swbem_date_time}'"
+            else  
+              "'#{item}'"
+          end
+        end
+           
+        def camelize(string)
+          string.to_s.gsub(/(?:^|_)(.)/) { $1.upcase }    
+        end  
+        
+        def underscore(string)
+          string.to_s.gsub(/::/, '/').gsub('_', '___').gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+          gsub(/([a-z\d])([A-Z])/,'\1_\2').tr("-", "_").downcase
+        end
     end
 
     def initialize(win32ole_object)
@@ -508,11 +412,5 @@ module RubyWMI
         object_id
       end
     end
-
   end
-
-  def const_missing(name)
-    self.const_set(name, Class.new(self::Base))
-  end
-  
 end
