@@ -9,7 +9,6 @@ class WmiSpec < WMI::Base
 end
 
 describe 'construct_finder_sql' do
-
   it 'should return a sql string' do
     wql = "SELECT * FROM Win32_Something"
     get_wql(WmiSpec).should eql(wql)
@@ -46,13 +45,15 @@ describe 'construct_finder_sql' do
   end
 
   it 'should return a sql string with conditions' do  
-    wql = "SELECT * FROM Win32_Something WHERE TimeWritten >= '20100403091237.000000-300' AND TimeWritten < '20100410091237.000000-300'"
+    offset = Time.local(2010,4,10,9,12,37).gmt_offset/60
+    wql = "SELECT * FROM Win32_Something WHERE TimeWritten >= '20100403091237.000000#{offset}' AND TimeWritten < '20100410091237.000000#{offset}'"
     date_range = Time.local(2010,4,3,9,12,37)...Time.local(2010,4,10,9,12,37)
     get_wql(WmiSpec, :conditions => {:time_written => date_range}).should eql(wql)
   end
     
   it 'should return a sql string with conditions' do  
-    wql = "SELECT * FROM Win32_Something WHERE TimeWritten >= '20100403091237.000000-300' AND TimeWritten <= '20100410091237.000000-300'"
+    offset = Time.local(2010,4,10,9,12,37).gmt_offset/60
+    wql = "SELECT * FROM Win32_Something WHERE TimeWritten >= '20100403091237.000000#{offset}' AND TimeWritten <= '20100410091237.000000#{offset}'"
     date_range = Time.local(2010,4,3,9,12,37)..Time.local(2010,4,10,9,12,37)
     get_wql(WmiSpec, :conditions => {:time_written => date_range}).should eql(wql)
   end
@@ -76,5 +77,4 @@ describe 'construct_finder_sql' do
     wql = "SELECT Name, Caption FROM Win32_Something"
     get_wql(WmiSpec, :select => [:name, :caption]).should eql(wql)
   end
-
 end
