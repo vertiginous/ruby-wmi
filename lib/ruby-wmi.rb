@@ -6,8 +6,8 @@ require 'win32ole'
 WIN32OLE.codepage = WIN32OLE::CP_UTF8
 
 module RubyWMI
-  autoload :privilege, 'ruby-wmi/privilege'
-  autoload :base, 'ruby-wmi/base'
+  autoload :Privilege, 'ruby-wmi/privilege'
+  autoload :Base, 'ruby-wmi/base'
 
   # Returns an array containing all the WMI subclasses
   # on a sytem.  Defaults to localhost
