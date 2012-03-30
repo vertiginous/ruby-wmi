@@ -1,4 +1,4 @@
-module WMI
+module RubyWMI
   module Privilege
     # Required to create a primary token.
     CreateToken = 1
