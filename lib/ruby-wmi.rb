@@ -1,5 +1,7 @@
-class RubyWMI
-  VERSION = '0.3.0'
+require 'ruby-wmi/version'
+
+module RubyWMI
+  
 end
 
 $:.unshift(File.dirname(__FILE__)) unless
