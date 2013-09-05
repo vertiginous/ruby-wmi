@@ -388,7 +388,7 @@ module RubyWMI
     
     def method_missing(name,*args)
       name = camelize(name.to_s)
-      @win32ole_object.send(name)
+      @win32ole_object.send(name, *args)
     end
     
     def camelize(string)
